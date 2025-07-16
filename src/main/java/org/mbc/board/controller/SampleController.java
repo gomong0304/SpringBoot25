@@ -99,4 +99,11 @@ public class SampleController {
 
         // 리턴타입이 void 이므로 /resources/templates/ex/ex2.html를 찾는다.
     }
+
+    @GetMapping("/ex/ex3") // http://192.168.111.105:80/ex/ex3 -> /resources/templates/ex/ex3.html
+    public void ex3(Model model){
+        log.info("=== SampleController.ex3 메서드 실행 ===");
+
+        model.addAttribute("arr", new String[]{"최수빈, 최연준, 최범규"});
+    }
 }
