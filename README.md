@@ -19,12 +19,12 @@ spring.jpa.properties.hibernate.format_sql=true
 spring.jpa.show-sql=true
 
 =================build.Gradle=================
+
 /*메이븐 리포지토리에서 코드를 가져와 코끼리를 누르면 가져온다.*/
 
 implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'     /*프론트 관련*/
 
 implementation 'org.springframework.boot:spring-boot-starter-web'           /*string-web*/
-
 
 compileOnly 'org.projectlombok:lombok'                                      /*lombok*/
 
