@@ -1,6 +1,8 @@
 package org.mbc.board.service;
 
 import org.mbc.board.dto.BoardDTO;
+import org.mbc.board.dto.PageRequestDTO;
+import org.mbc.board.dto.PageResponseDTO;
 
 public interface BoardService {
     // 조장용 코드 -> 시그니처만 필요 -> Impl 구현 클래스 -> 실행문 만든다.
@@ -21,6 +23,11 @@ public interface BoardService {
     /*=========================================================================*/
 
     void remove(Long bno); // 프론트에서 bno 가 넘어오면 삭제 작업이 진행된다.
+
+    /*=========================================================================*/
+
+    PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO);
+    // 페이징 처리에 대한 요청을 리스트로 처리하고 결과를 응답으로 보내는 메서드
 
 
 }

@@ -42,7 +42,7 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'                                  /*lombok*/
     testAnnotationProcessor 'org.projectlombok:lombok'                          /*lombok*/
 
-    /*p460 DTO 와 Entity 간의 변환용*/
+    /*p460 DTO 와 Entity 간의 변환용 : modelmapper*/
     /*과거에는 Entity -> DTO 로 변환 또는 DTO -> Entity 로 변환해서 써야했었는데 요즘에는 아래와같이 변환 가능하도록 나옴 */
     /*프로젝트에 config 라는 환경설정용 패키지를 만들고 RootConfig 라는 클래스를 만들어서 사용하면 된다.*/
     implementation 'org.modelmapper:modelmapper:3.1.0'
@@ -78,10 +78,10 @@ sourceSets {
         }
     }
 }
-/*쿼리 dsl 사용법 -> 오른쪽에 있는 Gradle 메뉴를 열고 other 를 찾아서 compliejava 실행*/
-/* 하단에 complie 가 된다. -> 왼쪽 탐색기 -> build- > generated -> main -> domain ->
-q 로 시작하는 클래스를 만든거임 쿼리 dsl용 객체로 우리가 커스텀 하면 안됨!!
-*********주의 사항 : 엔티티나 dto를 건들면 q 도메인을 다시 생성해야한다.*********
+/*쿼리 dsl 사용법 -> 오른쪽에 있는 Gradle 메뉴를 열고 other 를 찾아서 compilejava 실행*/
+/* 하단에 compile 가 된다. -> 왼쪽 탐색기 -> build- > generated -> main -> domain ->
+q 로 시작하는 클래스를 만든거임 쿼리 dsl 용 객체로 우리가 커스텀 하면 안됨!!
+*********주의 사항 : 엔티티나 dto 를 건들면 q 도메인을 다시 생성해야한다.*********
 삭제 방법 -> 오른쪽 Gradle 메뉴 -> Tasks -> build -> clean 후 다시 생성하면 됨.*/
 
 compileJava.dependsOn('clean')

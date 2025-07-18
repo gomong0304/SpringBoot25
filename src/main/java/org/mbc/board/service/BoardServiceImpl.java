@@ -4,12 +4,18 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.mbc.board.domain.Board;
 import org.mbc.board.dto.BoardDTO;
+import org.mbc.board.dto.PageRequestDTO;
+import org.mbc.board.dto.PageResponseDTO;
 import org.mbc.board.repository.BoardRepository;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service // 스프링에게 service 계층임을 알린다.
 @Log4j2
@@ -69,5 +75,32 @@ public class BoardServiceImpl implements BoardService {
     public void remove(Long bno) {
         boardRepository.deleteById(bno);
         // delete from board where bno = bno
+    }
+
+    /*========================================================================================*/
+
+    @Override // 리스트 페이지 요청에 온 값을 응답을 보낸다 (페이징 처리)
+    public PageResponseDTO<BoardDTO> list(PageRequestDTO pageRequestDTO) {
+        // PageRequestDTO 에서 넘어온 값을 처리하고 PageResponseDTO 로 보내야한다.
+
+        String[] types = pageRequestDTO.getTypes(); // 프론트에서 넘어온 type 을 t,c,w 처리한다.
+        String keyword = pageRequestDTO.getKeyword(); // 프론트에서 넘어온 검색 단어 처리
+        Pageable pageable = pageRequestDTO.getPageable("bno"); // 프론트에서 넘어온 bno를 이용한 정렬 처리용
+        // return PageRequest.of(this.page-1, this.size, Sort.by(props).descending());
+
+        // Page<Board> -> List<BoardDTO> 변환하고 리턴 되어야한다.
+        // 테스트에서 해봤던 코드
+        Page<Board> result = boardRepository.searchAll(types, keyword, pageable);
+
+        List<BoardDTO> dtoList = result.getContent().stream() // stream() 바이트가 전달되는 기법
+            .map(board -> modelMapper.map(board,BoardDTO.class)) // modelMapper 로 Entity 를 dto 로 변환
+            .collect(Collectors.toList()); // Collectors.toList() 리스트로 변환
+            // Entity 를 dto 로 변환하는 코드
+
+        return PageResponseDTO.<BoardDTO>withAll()
+                .pageRequestDTO(pageRequestDTO)
+                .dtoList(dtoList)
+                .total((int)result.getTotalElements())
+                .build(); // 빌더패턴을 이용해서 리턴할 때 사용함.
     }
 }
