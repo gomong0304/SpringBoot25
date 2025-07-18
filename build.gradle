@@ -42,6 +42,10 @@ dependencies {
     testCompileOnly 'org.projectlombok:lombok'                                  /*lombok*/
     testAnnotationProcessor 'org.projectlombok:lombok'                          /*lombok*/
 
+    // @valid 처리를 위한 라이브러리 추가
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-validation
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+
     /*p460 DTO 와 Entity 간의 변환용 : modelmapper*/
     /*과거에는 Entity -> DTO 로 변환 또는 DTO -> Entity 로 변환해서 써야했었는데 요즘에는 아래와같이 변환 가능하도록 나옴 */
     /*프로젝트에 config 라는 환경설정용 패키지를 만들고 RootConfig 라는 클래스를 만들어서 사용하면 된다.*/

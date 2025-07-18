@@ -8,32 +8,35 @@
     <div class="row mt-3">
         <!--검색용 form 처리-->
         <form action="/board/list" method="get">
-        <div class="col">
-            <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
-            <div class="input-group">
-            <div class="input-group-prepend">
-                <select class="form-select" name="type">
-                    <option value="">검색 시 클릭</option>
-                    <option value="t" th:selected="${pageRequestDTO.type=='t'}">제목</option>
-                    <option value="c" th:selected="${pageRequestDTO.type=='c'}">내용</option>
-                    <option value="w" th:selected="${pageRequestDTO.type=='w'}">작성자</option>
-                    <option value="tc" th:selected="${pageRequestDTO.type=='tc'}">제목+내용</option>
-                    <option value="tw" th:selected="${pageRequestDTO.type=='tw'}">제목+작성자</option>
-                    <option value="tcw" th:selected="${pageRequestDTO.type=='tcw'}">제목+내용+작성자</option>
-                </select>
-            </div> <!--검색 리스트 박스 종료-->
+            <div class="col">
+                <input type="hidden" name="size" th:value="${pageRequestDTO.size}">
+                <div class="input-group">
+                    <div class="input-group-prepend">
+                         <select class="form-select" name="type">
+                            <option value="">검색 시 클릭</option>
+                            <option value="t" th:selected="${pageRequestDTO.type=='t'}">제목</option>
+                            <option value="c" th:selected="${pageRequestDTO.type=='c'}">내용</option>
+                            <option value="w" th:selected="${pageRequestDTO.type=='w'}">작성자</option>
+                            <option value="tc" th:selected="${pageRequestDTO.type=='tc'}">제목+내용</option>
+                            <option value="tw" th:selected="${pageRequestDTO.type=='tw'}">제목+작성자</option>
+                            <option value="tcw" th:selected="${pageRequestDTO.type=='tcw'}">제목+내용+작성자</option>
+                         </select>
+                    </div> <!--검색 리스트 박스 종료-->
 
-            <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
-            <div class="input-group-append">
-                <button class="btn btn-outline-secondary searchBtn" type="submit">검색</button>
-                <button class="btn btn-outline-secondary clearBtn" type="button">clear</button>
+                    <input type="text" class="form-control" name="keyword" th:value="${pageRequestDTO.keyword}">
+                     <div class="input-group-append">
+                         <button class="btn btn-outline-secondary searchBtn" type="submit">검색</button>
+                         <button class="btn btn-outline-secondary clearBtn" type="button">clear</button>
+                         <button class="btn btn-outline-secondary regBtn" type="button">새글</button>
+                     </div>
+                </div>
             </div>
-        </div>
 
             <div class="card">
                 <div class="card-header">
                     게시판 리스트 페이지
-                </div>
+                </div> <!--card-header 종료-->
+
                     <div class="card-body">
                         <h5 class="card-title"> Board List </h5>
                         <!--테이블 영역-->
@@ -46,16 +49,21 @@
                                     <th scope="col">등록일</th>
                                 </tr>
                             </thead> <!--테이블 제목 끝-->
-                            <tbody>
+
+                            <tbody th:with="link = ${pageRequestDTO.getLink()}">
                                 <tr th:each="dto:${responseDTO.dtoList}"> <!--배열로 받은 객체를 1개씩 꺼내어 dto로 넣는다.-->
+                                <!--/* for 문이고 dto 라는 변수에 list 객체를 담는다. */-->
                                     <th scope="row">[[${dto.bno}]]</th> <!--번호-->
-                                    <td> [[${dto.title}]] </td>
-                                    <td> [[${dto.writer}]] </td>
-                                    <td> [[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]] </td>
+                                    <td>
+                                        <a th:href="|@{/board/read(bno =${dto.bno})}&${link}|"> [[${dto.title}]] </a>
+                                    </td>
+                                    <td>[[${dto.writer}]]</td>
+                                    <td>[[${#temporals.format(dto.regDate, 'yyyy-MM-dd')}]]</td>
                                         <!--타입리프에서 제공하는 포메팅-->
                                 </tr>
                             </tbody> <!--표 본문 영역-->
                         </table>
+
                         <!--페이징 처리용 아이콘-->
                         <div class="float-end">
                             <ul class="pagination flex-wrap">
@@ -73,12 +81,32 @@
                                 </li>
                             </ul>
                         </div>
-                    </div>
+                    </div> <!--card-body 종료-->
+            </div> <!--card 종료-->
+        </form>
+    </div> <!--col 종료-->
+    </div> <!--row 종료-->
+
+    <!--모달 창 용-->
+    <div class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">게시물 추가가 완료되었습니다</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+
+                <div class="modal-body">
+                    <p>작성하신 게시물이 성공적으로 추가되었습니다.</p>
+                </div>
+
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">확인</button>
+                    <button type="button" class="btn btn-primary">이건 무슨 버튼..</button>
+                </div>
             </div>
         </div>
-        </form>
     </div>
-</div>
 
 <!--=================================================================================================================-->
 
@@ -116,12 +144,30 @@
     },false) // 버블링
     // 하단에 페이징 번호를 클릭시 적용되는 기능 구현
 
-    /*clearBtn 클릭 시 기능 추가*/
+    // modal 보여주기1
+    const result = [[${result}]]
+
+    // 위에 코드 변경
+    const modal = new bootstrap.Modal(document.querySelector(".modal"))
+
+    if (result){
+        modal.show()
+    }
+
+    // clearBtn 클릭 시 기능 추가
     document.querySelector(".clearBtn").addEventListener("click",function (e){
         e.preventDefault() // 원래 기능 무시
         e.stopPropagation() // 버블링 금지
 
         self.location = '/board/list' // 초기화 버튼을 누르면 옵션 없이 초기화면, 초기 리스트 보임
     },false)
+
+    // 목록으로 이동하는 버튼 호출 작성
+    document.querySelector(".regBtn").addEventListener("click",function (e){
+        e.preventDefault() // 원래 기능 무시
+        e.stopPropagation() // 버블링 금지
+
+        self.location = '/board/register'  // 초기화 버튼을 누르면 옵션없이 초기 리스트 보임
+    },false) // 버블링
 
 </script>
